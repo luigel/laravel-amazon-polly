@@ -2,6 +2,8 @@
 
 namespace Luigel\AmazonPolly;
 
+use League\Flysystem\FileNotFoundException;
+
 class AmazonPolly
 {
     /**
@@ -39,14 +41,56 @@ class AmazonPolly
 
     /**
      * Converts text to speech
-     *
+     * 
+     * 'Engine' => 'standard|neural',
+     * 'LanguageCode' => 'arb|cmn-CN|cy-GB|da-DK|de-DE|en-AU|en-GB|en-GB-WLS|en-IN|en-US|es-ES|es-MX|es-US|fr-CA|fr-FR|is-IS|it-IT|ja-JP|hi-IN|ko-KR|nb-NO|nl-NL|pl-PL|pt-BR|pt-PT|ro-RO|ru-RU|sv-SE|tr-TR',
+     *'LexiconNames' => ['<string>', ...],
+     *'OutputFormat' => 'json|mp3|ogg_vorbis|pcm', // REQUIRED
+     *'SampleRate' => '<string>',
+     *'SpeechMarkTypes' => ['<string>', ...],
+     *'Text' => '<string>', // REQUIRED
+     *'TextType' => 'ssml|text',
+     *'VoiceId' => 'Aditi|Amy|Astrid|Bianca|Brian|Camila|Carla|Carmen|Celine|Chantal|
+      *Conchita|Cristiano|Dora|Emma|Enrique|Ewa|Filiz|Geraint|Giorgio|Gwyneth|Hans|Ines|Ivy|Jacek|
+      *Jan|Joanna|Joey|Justin|Karl|Kendra|Kimberly|Lea|Liv|Lotte|Lucia|Lupe|Mads|Maja|Marlene|
+      *Mathieu|Matthew|Maxim|Mia|Miguel|Mizuki|Naja|Nicole|Penelope|Raveena|Ricardo|Ruben|Russell|Salli|
+      *Seoyeon|Takumi|Tatyana|Vicki|Vitoria|Zeina|Zhiyu', // REQUIRED
+     * 
+     * 
      * @param string $text
      * @param array $options
      * @return null|\GuzzleHttp\Psr7\Stream|\Aws\Result
      */
-    public function convertToSpeech(string $text, array $options)
+    public function convertTextToSpeech(string $text, array $options)
     {
+        if (!isset($options['VoiceId']))
+        {
+            $options['VoiceId'] = config('amazon-polly.default_voice_id');
+        }
+        
         $parameters = array_merge($options, ['Text' => $text]);
         return $this->client->synthesizeSpeech($parameters);
     }
+
+    /**
+     * Converts file to speech
+     *
+     * @param string $path
+     * @param array $options
+     * @return null|\GuzzleHttp\Psr7\Stream|\Aws\Result
+     * 
+     * @throws FileNotFoundException
+     */
+    public function convertFileToSpeech(string $path, array $options)
+    {
+        if (!file_exists($path))
+        {
+            throw new FileNotFoundException($path);
+        }
+
+        $text = file_get_contents($path);
+        
+        return $this->convertTextToSpeech($text, $options);
+    }
+
 }
