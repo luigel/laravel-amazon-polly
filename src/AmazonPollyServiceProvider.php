@@ -53,8 +53,9 @@ class AmazonPollyServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'amazon-polly');
 
         // Register the main class to use with the facade
-        $this->app->singleton('amazon-polly', function () {
-            return new AmazonPolly;
+        $this->app->singleton('amazon-polly', function ($app) {
+            $config = $app->make('config')->get('amazon-polly');
+            return new AmazonPolly($config);
         });
     }
 }
