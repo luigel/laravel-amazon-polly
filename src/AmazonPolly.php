@@ -36,4 +36,17 @@ class AmazonPolly
     {
         return $this->client;
     }
+
+    /**
+     * Converts text to speech
+     *
+     * @param string $text
+     * @param array $options
+     * @return null|\GuzzleHttp\Psr7\Stream|\Aws\Result
+     */
+    public function convertToSpeech(string $text, array $options)
+    {
+        $parameters = array_merge($options, ['Text' => $text]);
+        return $this->client->synthesizeSpeech($parameters);
+    }
 }
