@@ -1,0 +1,54 @@
+{
+    "name": "luigel/laravel-amazon-polly",
+    "description": "",
+    "keywords": [
+        "luigel",
+        "laravel-amazon-polly"
+    ],
+    "homepage": "https://github.com/luigel/laravel-amazon-polly",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Rigel Kent Carbonel",
+            "email": "rigel20.kent@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "illuminate/support": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Luigel\\AmazonPolly\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Luigel\\AmazonPolly\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Luigel\\AmazonPolly\\AmazonPollyServiceProvider"
+            ],
+            "aliases": {
+                "LaravelAmazonPolly": "Luigel\\AmazonPolly\\AmazonPollyFacade"
+            }
+        }
+    }
+}
